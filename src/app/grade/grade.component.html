@@ -1,0 +1,83 @@
+<h3>Grade Documents</h3>
+<p>Please upload Word assignments that you would like to be graded by JGRAM. 
+	Files should end in .docx and each file's size should be less than 10mb.</p>
+
+<div class = "container">
+	<div class = "row">
+		<div class = "col">
+			
+			<!-- Form -->
+			<form [formGroup] = "fileForm" (ngSubmit) = "uploadSubmit()">
+			<h4>Upload.</h4>
+
+			<!-- Drop Zone -->
+			<div ng2FileDrop
+				[uploader] = "uploader"
+				class = "drop-zone">
+					Drag and drop files to upload.
+			</div>
+
+			<!-- Form input -->
+			<input formControlName = "documentSelect"  
+				ng2FileSelect
+				type = "file" 
+				accept = ".docx" 
+				[uploader] = "uploader" 
+				multiple 
+			/>
+
+			<!-- List of files to upload -->
+			<h4>To Grade.</h4>
+			<table>
+				<thead>
+					<tr>
+						<td>Name</td>
+						<td>Size</td>
+						<td>Remove</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr *ngFor = "let doc of uploader.queue">
+						<td>{{ doc.file.name }}</td>
+						<td>{{ doc.file.size / 1024 }} kb</td>
+						<td (click) = "doc.remove()"> X </td>
+					</tr>
+				</tbody>
+			</table>
+
+			<!-- Submission -->
+			<button [disabled] = "!fileForm.valid || submitted" type = "submit">Upload all.</button>
+			</form>
+
+			<!-- Remove all uploads -->
+			<button [disabled] = "submitted" (click) = "removeAll()">Remove all.</button>
+		</div> <!-- col -->
+
+		<!-- Current status -->
+		<div class = "col d-flex align-self-center">
+			<div>
+				
+				<div *ngIf = "displayLoading; else elseBlock">
+					<h4>Loading...</h4>
+					<app-loading></app-loading>
+				</div>
+				
+				<ng-template #elseBlock>
+					<h4>Waiting for upload...</h4>
+					<p>Link to a compressed zip file of graded documents will appear here.</p>
+				</ng-template>
+
+				<div *ngIf = "errors.length != 0">
+					<h4>Errors.</h4>
+					<app-errors [errors] = "errors"></app-errors>
+				</div>
+
+				<div *ngIf = "submitted">
+					<h4>Result.</h4>
+					<p>TODO - fill in response when available with zip link.</p>
+				</div>
+
+			</div>
+		</div> <!-- col -->
+	</div> <!-- row -->
+</div> <!-- container -->
